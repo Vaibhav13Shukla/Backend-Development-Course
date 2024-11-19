@@ -139,45 +139,61 @@ def update_constellation(name):
         return redirect(get_http_cat(404), code=302)
 
 # 8. For a constellation specified by name, view the image
+# You might have to use an image generator API - try https://imagepig.com/
+# Helper function to get HTTP Cat image for error codes
+def get_http_cat(status_code):
+    return f"https://http.cat/{status_code}"
+
+# Function to fetch an image URL for a constellation from ImagePig
 def get_constellation_image(constellation_name):
     image_pig_url = f'https://imagepig.com/api?q={constellation_name}&format=json'
     
     try:
+        # Make a GET request to ImagePig
         response = requests.get(image_pig_url)
-        response.raise_for_status()
-        data = response.json()
+        response.raise_for_status()  # Check if the request was successful
         
-        if data['status'] == 'success' and 'results' in data and data['results']:
+        data = response.json()  # Parse the response as JSON
+        
+        # Check if the 'url' key is available in the response
+        if 'results' in data and data['results']:
             return data['results'][0]['url']
         else:
             return None
-    except requests.exceptions.RequestException:
+    except requests.exceptions.RequestException as e:
+        # If there's an error with the request, return None
         return None
 
+# Endpoint to retrieve the constellation image by name
 @app.route('/constellation/image', methods=['GET'])
 def constellation_image():
+    # Get the name parameter from the query string
     constellation_name = request.args.get('name')
-
+    
+    # If the name is not provided, return an error
     if not constellation_name:
         error_response = {
             'error': "Constellation name is required",
             'status_code': 400,
-            'image_url': get_http_cat(400)
+            'image_url': get_http_cat(400)  # HTTP Cat image for 400 error
         }
         return jsonify(error_response), 400
-
+    
+    # Call the helper function to get the constellation image
     image_url = get_constellation_image(constellation_name)
-
+    
+    # If an image URL is found, return it
     if image_url:
         return jsonify({"constellation": constellation_name, "image_url": image_url}), 200
     else:
+        # If no image is found, return a 404 error with HTTP Cat image
         error_response = {
             'error': "Image not found for the specified constellation",
             'status_code': 404,
-            'image_url': get_http_cat(404)
+            'image_url': get_http_cat(404)  # HTTP Cat image for 404 error
         }
         return jsonify(error_response), 404
-
+        
 # 9. Filter constellations by origin (Query String)
 @app.route('/constellations/filters/origin', methods=['GET'])
 def filter_constellations_by_origin():
