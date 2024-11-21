@@ -34,7 +34,7 @@ def get_constellation(name):
         return jsonify(constellation), 200
     else:
         # Redirect to the corresponding HTTP Cat image for 404 error
-        return redirect(get_http_cat(404), code=302)
+        return redirect(get_http_cat(404), code=404)
 
 # 3. Add a new constellation
 @app.route('/constellations', methods=['POST'])
