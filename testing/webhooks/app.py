@@ -1,32 +1,32 @@
-from flask import Flask, jsonify
 import requests
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-
 def send_simple_message():
-    return requests.post(
-        "https://api.mailgun.net/v3/sandboxf1695dc9bcbf4a14bbf36854bb6584c5.mailgun.org/messages",
-        auth=("api", "3917881dec953c0d16557ca05c32ef0e-c02fd0ba-54c6e27f"),
+    response = requests.post(
+        "https://api.mailgun.net/v3/sandboxd67c519a4b6949318e1f371c6e40ca0a.mailgun.org/messages",
+        auth=("api","4be43a7ba38628dc914006728d3df9af-c02fd0ba-56b9258b"),
         data={
-            "from": "vaibhav.shuklahere@gmail.com <mailgun@sandboxf1695dc9bcbf4a14bbf36854bb6584c5.mailgun.org>",
-            "to": ["vimal.j@atriauniversity.edu.in"],
+            "from": "vaibhav <mailgun@sandboxd67c519a4b6949318e1f371c6e40ca0a.mailgun.org>",
+            "to": ["opwala2426@gmail.com"],
             "subject": "Hello",
             "text": "Testing some Mailgun awesomeness!"
         }
     )
-
+    return response
 
 @app.route('/', methods=['POST'])
 def index():
-    send_simple_message()
-    return "Email sent!"
-
+    response = send_simple_message()
+    return f"Email sent! Status Code: {response.status_code}, Response: {response.text}"
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
     print("Webhook received")
-    return jsonify({"message":"OK"})
+    datas = request.get_json()
+    print(datas)
+    return jsonify({"message": "ok"})
 
-if __name__ == "__main__":
+if __name__ == '_main_':
     app.run(debug=True)
