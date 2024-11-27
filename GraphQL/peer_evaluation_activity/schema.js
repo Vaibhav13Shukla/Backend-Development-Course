@@ -1,34 +1,33 @@
 const { gql } = require('apollo-server');
 
 const typeDefs = gql`
-  type Movies {
-    id: ID!
-    title: String!
-    director: String!
-    releaseYear: Int!
-    reviews: [Reviews!]!  
-  }
+    type Book {
+        id: ID!
+        title: String!
+        author: String!
+        publishedYear: Int!
+    }
 
-  type Reviews {
-    id: ID!
-    movieId: ID!  
-    rating: Float! 
-    reviewer: String!
-  }
+    type Member {
+        id: ID!
+        name: String!
+        email: String!
+        membershipType: String!
+        role: String!
+    }
 
-  type Query {
-    Movie(id: ID!): Movies 
-    Movies: [Movies!]!
-    Reviews: [Reviews!]!
-    secretData: String!
-    Review(id: ID!): Reviews
-  }
+    type Query {
+        books: [Book!]!
+        book(id: ID!): Book
+        members: [Member!]!
+        secretData: String!
+    }
 
-  type Mutation {
-    addMovie(title: String!, director: String!, releaseYear: Int!): Movies!
-    updateMovie(id: ID!, title: String, director: String, releaseYear: Int): Movies!
-    login(email: String!, password: String!): String!  # Returns a token for authentication
-  }
+    type Mutation {
+        login(email: String!, password: String!): String
+        addBook(title: String!, author: String!, publishedYear: Int!): Book
+        updateBook(id: ID!, title: String, author: String, publishedYear: Int): Book
+    }
 `;
 
 module.exports = typeDefs;

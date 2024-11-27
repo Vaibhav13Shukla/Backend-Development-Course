@@ -8,10 +8,9 @@ const server = new ApolloServer({
   context: ({ req }) => {
     const token = req.headers.authorization || '';
     return { token };
-  }
+  },
 });
 
 server.listen().then(({ url }) => {
   console.log(`🚀 Server ready at ${url}`);
 });
-
