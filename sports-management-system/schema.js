@@ -1,42 +1,40 @@
-const { gql } = require('apollo-server');
+const { gql } = require("apollo-server");
 
 const typeDefs = gql`
-  type Team {
-    id: ID!
-    name: String!
-    city: String!
-    championshipsWon: Int!
-  }
+    type User {
+        id: ID!
+        email: String!
+        role: String!
+    }
 
-  type Player {
-    id: ID!
-    name: String!
-    teamId: ID!
-    position: String!
-    age: Int!
-  }
+    type Team {
+        id: ID!
+        name: String!
+        city: String!
+        championshipsWon: Int!
+    }
 
-  type User {
-    id: ID!
-    name: String!
-    email: String!
-    role: String!
-  }
+    type Player {
+        id: ID!
+        name: String!
+        teamId: ID!
+        position: String!
+        age: Int!
+    }
 
-  type Query {
-    teams: [Team!]!
-    team(id: ID!): Team
-    playersByTeam(teamId: ID!): [Player!]!
-    users: [User!]!
-  }
+    type Query {
+        teams: [Team!]!
+        team(id: ID!): Team
+        players(teamId: ID!): [Player!]!
+    }
 
-  type Mutation {
-    addTeam(name: String!, city: String!, championshipsWon: Int!): Team!
-    addPlayer(name: String!, teamId: ID!, position: String!, age: Int!): Player!
-    updateTeamChampionships(id: ID!, championshipsWon: Int!): Team!
-    deletePlayer(id: ID!): Player!
-    login(email: String!, password: String!): String!
-  }
+    type Mutation {
+        login(email: String!, password: String!): String!
+        addTeam(name: String!, city: String!, championshipsWon: Int!): Team!
+        addPlayer(name: String!, teamId: ID!, position: String!, age: Int!): Player!
+        updateTeamChampionships(id: ID!, championshipsWon: Int!): Team!
+        deletePlayer(id: ID!): String!
+    }
 `;
 
 module.exports = typeDefs;
